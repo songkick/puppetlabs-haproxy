@@ -28,6 +28,11 @@
 #    resultant haproxy.cfg file.
 #
 #
+#[*restart_command*]
+#   Command to use when restarting the on config changes.
+#    Passed directly as the <code>'restart'</code> parameter to the service resource.
+#    Defaults to undef i.e. whatever the service default is.
+#
 # === Examples
 #
 #  class { 'haproxy':
@@ -63,7 +68,8 @@ class haproxy (
   $manage_service   = true,
   $enable           = true,
   $global_options   = $haproxy::params::global_options,
-  $defaults_options = $haproxy::params::defaults_options
+  $defaults_options = $haproxy::params::defaults_options,
+  $restart_command  = undef
 ) inherits haproxy::params {
   include concat::setup
 
@@ -135,6 +141,7 @@ class haproxy (
         Concat['/etc/haproxy/haproxy.cfg'],
         File[$global_options['chroot']],
       ],
+      restart    => $restart_command,
     }
   }
 }
